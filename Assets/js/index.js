@@ -2,8 +2,8 @@ let localStream;
 let username;
 let remoteUser;
 let url = new URL(window.location.href);
-// // username = url.searchParams.get("username");
-// remoteUser = url.searchParams.get("remoteuser");
+username = url.searchParams.get("username");
+remoteUser = url.searchParams.get("remoteuser");
 let peerConnection;
 let remoteStream;
 let sendChannel;
@@ -120,7 +120,7 @@ let createPeerConnection = async () => {
 
   peerConnection.ondatachannel = receiveChannelCallback;
 
-  // sendChannel.onmessage=onSendChannelMessageCallBack;
+   sendChannel.onmessage=onSendChannelMessageCallBack;
 };
 function sendData() {
   const msgData = msgInput.value;
@@ -244,7 +244,7 @@ socket.on("ReceiveAnswer", function (data) {
   addAnswer(data);
 });
 socket.on("closedRemoteUser", function (data) {
-  // .................Newly Added..........................
+   .................Newly Added..........................
   const remoteStream = peerConnection.getRemoteStreams()[0];
   remoteStream.getTracks().forEach((track) => track.stop());
 
@@ -255,7 +255,7 @@ socket.on("closedRemoteUser", function (data) {
     remoteVid.srcObject.getTracks().forEach((track) => track.stop());
     remoteVid.srcObject = null;
   }
-  // .................Newly Added..........................
+   .................Newly Added..........................
   $.ajax({
     url: "/update-on-next/" + username + "",
     type: "PUT",
@@ -284,7 +284,7 @@ window.addEventListener("unload", function (event) {
       },
     });
     console.log("Leaving local user is: ", username);
-    // ..........................Newly Edited
+     ..........................Newly Edited
     $.ajax({
       url: "/update-on-otherUser-closing/" + remoteUser + "",
       type: "PUT",
@@ -293,10 +293,10 @@ window.addEventListener("unload", function (event) {
       },
     });
     console.log("Leaving remote user is: ", remoteUser);
-    // ..........................Newly Edited
+     ..........................Newly Edited
     console.log("This is Chrome");
   } else if (navigator.userAgent.indexOf("Firefox") != -1) {
-    // The browser is Firefox
+     The browser is Firefox
     $.ajax({
       url: "/leaving-user-update/" + username + "",
       type: "PUT",
@@ -306,7 +306,7 @@ window.addEventListener("unload", function (event) {
       },
     });
     console.log("Leaving local user is: ", username);
-    // ..........................Newly Edited
+    ..........................Newly Edited
     $.ajax({
       url: "/update-on-otherUser-closing/" + remoteUser + "",
       type: "PUT",
@@ -316,17 +316,17 @@ window.addEventListener("unload", function (event) {
       },
     });
     console.log("Leaving remote user is: ", remoteUser);
-    // ..........................Newly Edited
+     ..........................Newly Edited
 
     console.log("This is Firefox");
   } else {
-    // The browser is not Chrome or Firefox
+     The browser is not Chrome or Firefox
     console.log("This is not Chrome or Firefox");
   }
 });
 
 async function closeConnection() {
-  // .................Newly Added..........................
+   .................Newly Added..........................
   const remoteStream = peerConnection.getRemoteStreams()[0];
   remoteStream.getTracks().forEach((track) => track.stop());
   await peerConnection.close();
@@ -336,7 +336,7 @@ async function closeConnection() {
     remoteVid.srcObject.getTracks().forEach((track) => track.stop());
     remoteVid.srcObject = null;
   }
-  // .................Newly Added..........................
+   .................Newly Added..........................
   socket.emit("remoteUserClosed", {
     username: username,
     remoteUser: remoteUser,
@@ -353,23 +353,23 @@ async function closeConnection() {
 }
 $(document).on("click", ".next-chat", function () {
   document.querySelector(".chat-text-area").innerHTML = "";
-  // if (
-  //   peerConnection.connectionState === "connected" ||
-  //   peerConnection.iceCandidateState === "connected"
-  // ) {
+   if (
+     peerConnection.connectionState === "connected" ||
+     peerConnection.iceCandidateState === "connected"
+   ) {
   closeConnection();
   peerConnection.oniceconnectionstatechange = (event) => {
     if (
       peerConnection.iceConnectionState === "disconnected" ||
       peerConnection.iceConnectionState === "closed"
     ) {
-      // Peer connection is closed
+       Peer connection is closed
       console.log("Peer connection closed.");
     }
   };
-  //   console.log("User closed");
-  // } else {
-  //   fetchNextUser(remoteUser);
-  //   console.log("Moving to next user");
-  // }
+     console.log("User closed");
+   } else {
+     fetchNextUser(remoteUser);
+     console.log("Moving to next user");
+   }
 });
