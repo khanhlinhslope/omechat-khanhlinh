@@ -38,7 +38,28 @@ if (omeID) {
     },
   });
 }
-
+// .......... Delete All Records ..........
+document.getElementById("deleteButton").addEventListener("click", () => {
+  fetch("/deleteAllRecords", {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to delete records");
+      }
+      return response.text();
+    })
+    .then((message) => {
+      // Display a success message to the user or perform additional actions
+      console.log("Success:", message);
+      alert("All records have been successfully deleted!");
+    })
+    .catch((error) => {
+      console.error("Error deleting records:", error);
+      alert("An error occurred while deleting the records.");
+    });
+});
+// .......... Delete All Records ..........
 let init = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({
     video: true,
