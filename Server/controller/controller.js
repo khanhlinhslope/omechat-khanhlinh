@@ -160,3 +160,14 @@ exports.getNextUser = (req, res) => {
       });
     });
 };
+exports.deleteAllRecords = (req, res) => {
+  UserDB.deleteMany({})
+    .then(() => {
+      res.send("All records deleted successfully");
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while deleting all records",
+      });
+    });
+};
